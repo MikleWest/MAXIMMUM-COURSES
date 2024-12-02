@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ОГЭ Courses</title>
+    <style>
+        /* Общие стили */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h1, h3, p {
+            margin: 0;
+        }
+        a {
+            text-decoration: none;
+        }
+
+        /* Контейнер */
+        .container {
+            text-align: center;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        .container.hidden {
+            display: none;
+        }
+
+        /* Заголовки */
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            font-size: 18px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        /* Кнопки */
+        .button {
+            display: block;
+            margin: 10px auto;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #f0f0f0;
+            background-color: #2c2c2c;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #444;
+            color: #00bcd4;
+        }
+
+        /* Тарифы и инструкции */
+        .tariff, .instruction-content, .about-content {
+            background-color: #1e1e1e;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            text-align: left;
+            border: 1px solid #2c2c2c;
+        }
+        .tariff h3, .instruction-content h3, .about-content h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .tariff p, .instruction-content p, .about-content p {
+            font-size: 16px;
+            margin: 5px 0;
+            color: #ccc;
+        }
+
+        /* Чекбокс */
+        .checkbox-container {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-container label {
+            font-size: 16px;
+            color: #ccc;
+        }
+
+        /* Кнопка оплаты */
+        .pay-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            background-color: #2c2c2c;
+            color: #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .pay-button:hover {
+            background-color: #444;
+            color: #00bcd4;
+        }
+
+        /* Кнопка возврата */
+        .back-button {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 300;
+            color: #ccc;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Главное меню -->
+    <div class="container" id="main-menu">
+        <h1 class="title">Выберите предмет</h1>
+        <p class="subtitle">Курсы подготовки к ОГЭ</p>
+        <button class="button" onclick="showTariffs('english')">Английский</button>
+        <button class="button" onclick="showTariffs('chemistry')">Химия</button>
+        <button class="button" onclick="showAbout()">О нас</button>
+    </div>
+
+    <!-- Список тарифов -->
+    <div class="container hidden" id="tariffs">
+        <div id="tariff-content"></div>
+        <div class="back-button" onclick="showMainMenu()">Вернуться назад</div>
+    </div>
+
+    <!-- Инструкция по оплате -->
+    <div class="container hidden" id="instruction">
+        <div class="instruction-content">
+            <h3>Инструкция по оплате</h3>
+            <p>При оплате курса в сообщении укажите:</p>
+            <ul>
+                <li>Название курса</li>
+                <li>Тариф курса</li>
+                <li>Ваш ник в Telegram</li>
+            </ul>
+            <p>Ваш аккаунт в Telegram должен быть открыт, иначе мы не сможем с вами связаться.</p>
+        </div>
+        <div class="checkbox-container">
+            <input type="checkbox" id="confirm-instruction" onclick="togglePayButton()">
+            <label for="confirm-instruction">Я ознакомился с инструкцией</label>
+        </div>
+        <a href="#" id="pay-button" class="pay-button" target="_blank">Перейти к оплате</a>
+        <div class="back-button" onclick="showTariffs(selectedSubject)">Вернуться назад</div>
+    </div>
+
+    <!-- О нас -->
+    <div class="container hidden" id="about">
+        <div class="about-content">
+            <h3>О нас</h3>
+            <p>Мы — команда преподавателей, специализирующихся на подготовке к ОГЭ. Наши курсы основаны на опыте и знаниях, которые мы приобрели при подготовке к экзаменам и успешной сдаче.</p>
+            <p><strong>Наша миссия:</strong> Мы стремимся предоставить девятиклассникам полезные и доступные материалы для подготовки к ОГЭ. Наши онлайн-лекции созданы, чтобы помочь вам разобраться в сложных темах и уверенно чувствовать себя на экзамене.</p>
+            <p><strong>Наш опыт:</strong> Мы делимся своим личным опытом и знаниями о том, как успешно сдать ОГЭ. Наши материалы разработаны на основе реальных экзаменационных требований и практического опыта.</p>
+            <p><strong>Наш подход:</strong> Мы не являемся официальной образовательной организацией, однако наша цель — поддержать вас в подготовке к экзамену, предлагая поддержку и советы, основанные на нашем опыте.</p>
+        </div>
+        <div class="back-button" onclick="showMainMenu()">Вернуться назад</div>
+    </div>
+
+    <script>
+        const tariffs = {
+            english: [
+                {
+                    title: "Курс Lite",
+                    description: `
+                        - Разбор всех заданий 1 части ОГЭ по английскому языку<br>
+                        - Методика для улучшения знаний<br>
+                        - Онлайн-уроки и задания
+                    `,
+                    price: "500 рублей",
+                    link: "https://www.tinkoff.ru/rm/r_YlyZujfFEF.tUOoPQKqYT/ibO846829"
+                },
+                {
+                    title: "Курс Maximum",
+                    description: `
+                        - Полный разбор всего ОГЭ по английскому языку<br>
+                        - Методика для улучшения знаний<br>
+                        - Ссылки на дополнительное образование (подкасты, статьи)<br>
+                        - Шаблон письма<br>
+                        - Связь с куратором
+                    `,
+                    price: "800 рублей",
+                    link: "https://www.tinkoff.ru/rm/r_YlyZujfFEF.tUOoPQKqYT/ibO846829"
+                }
+            ],
+            chemistry: [
+                {
+                    title: "Курс Lite",
+                    description: `
+                        - Подробный разбор 1 части экзамена с теорией и практикой<br>
+                        - Видеоуроки
+                    `,
+                    price: "500 рублей",
+                    link: "https://www.tinkoff.ru/rm/r_YlyZujfFEF.tUOoPQKqYT/ibO846829"
+                },
+                {
+                    title: "Курс Maximum",
+                    description: `
+                        - Подробный разбор всех тем по химии ОГЭ<br>
+                        - Полный набор видеоуроков и тестов
+                    `,
+                    price: "800 рублей",
+                    link: "https://www.tinkoff.ru/rm/r_YlyZujfFEF.tUOoPQKqYT/ibO846829"
+                }
+            ]
+        };
+
+        let selectedSubject = '';
+        let selectedLink = '';
+
+        function showTariffs(subject) {
+            selectedSubject = subject;
+            const tariffContainer = document.getElementById('tariff-content');
+            tariffContainer.innerHTML = '';
+
+            tariffs[subject].forEach(tariff => {
+                tariffContainer.innerHTML += `
+                    <div class="tariff">
+                        <h3>${tariff.title}</h3>
+                        <p>${tariff.description}</p>
+                        <p>Цена: ${tariff.price}</p>
+                        <button class="button" onclick="showInstruction('${tariff.link}')">Оплатить</button>
+                    </div>
+                `;
+            });
+
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('tariffs').classList.remove('hidden');
+        }
+
+        function showInstruction(link) {
+            selectedLink = link;
+            document.getElementById('tariffs').classList.add('hidden');
+            document.getElementById('instruction').classList.remove('hidden');
+        }
+
+        function togglePayButton() {
+            const checkbox = document.getElementById('confirm-instruction');
+            const payButton = document.getElementById('pay-button');
+            if (checkbox.checked) {
+                payButton.style.display = 'inline-block';
+                payButton.href = selectedLink;
+            } else {
+                payButton.style.display = 'none';
+            }
+        }
+
+        function showMainMenu() {
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('tariffs').classList.add('hidden');
+            document.getElementById('instruction').classList.add('hidden');
+            document.getElementById('about').classList.add('hidden');
+        }
+
+        function showAbout() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('about').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
